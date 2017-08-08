@@ -6,7 +6,7 @@ It can directly download found documents, or output their URL to pipe them somew
 
 It can also be used to directly download a single file or a list files.
 
-### Options
+## Options
 * `--accept` optional regular expression (case insensitive) to keep matching document names.
   * Example : `--accept=jpe?g` will hopefully keep all : .JPG, .JPEG, .jpg, .jpeg
 * `--download` directly download found documents if set, output their URL if not.
@@ -19,7 +19,7 @@ It can also be used to directly download a single file or a list files.
 * `--download-files` will download files which URL are listed in the pointed file.
   * Example : `--download-files url.lst`
 
-### Usage
+## Usage
 * `doc_crawler.py [--accept=jpe?g] [--download] [--verbose] [--wait=5] [--random-wait] http://…`
 * `doc_crawler.py [--wait=5] [--random-wait] --download-file http://…`
 * `doc_crawler.py [--wait=5] [--random-wait] --download-files url.lst`
