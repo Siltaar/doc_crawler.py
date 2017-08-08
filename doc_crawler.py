@@ -12,43 +12,6 @@ from time import sleep
 from urllib.parse import urljoin
 import requests, re, logging, logging.config, yaml, datetime
 
-"""
-The doc_crawler.py can recursively explore a website from a starting URL and retrieve, in the
-descendant pages, the encountered document files (by default PDF, ODT, CSV, RTF, DOC and XLS)
-based on their extension.
-
-It can directly download found documents, or output their URL to pipe them somewhere else.
-
-It can also be used to directly download a single file or a list files.
-
-# Options
-## --accept
-Optional regular expression (case insensitive) to keep matching document names.
-Example : --accept=jpe?g
-Will hopefully keep all : .JPG, .JPEG, .jpg, .jpeg
-## --download
-Directly download found documents if set, output their URL if not.
-## --verbose
-Creates a log file to keep trace of what was done.
-## --wait
-Will wait that number of seconds before each download (page or document) if set.
-Example : --wait=5
-Will wait 5s before each download.
-## --random-wait
-Will randomly wait between 1 second and --wait seconds if set.
-## --download-file
-Will directly retrieve and write in the current folder the pointed URL.
-Example : --download-file url
-## --download-files
-Will download files which URL are listed in the pointed file.
-Example : --download-files url.lst
-
-# Usage
-doc_crawler.py [--accept=jpe?g] [--download] [--verbose] [--wait=5] [--random-wait] http://…
-doc_crawler.py [--wait=5] [--random-wait] --download-file http://…
-doc_crawler.py [--wait=5] [--random-wait] --download-files url.lst
-
-"""
 
 LOGGING = """
 	version: 1
@@ -72,6 +35,13 @@ WANTED_EXT = '\.(pdf|docx?|xlsx?|od[ts]|csv|rtf)'
 
 def crawl_web_for_files(starting_URL, wanted_ext=WANTED_EXT, do_dl=False, do_journal=False,
 		do_wait=False, do_random_wait=False):
+	""" Explore a website recursively from a given URL and retrieve, in the descendant pages,
+	the encountered document files (by default PDF, ODT, CSV, RTF, DOC and XLS) based on their
+	extension.
+
+	It can directly download found documents, or output their URL to pipe them somewhere else.
+
+	It can also be used to directly download a single file or a list files."""
 	if do_journal:
 		logging.config.dictConfig(yaml.load(LOGGING))
 		journal = logging.getLogger('journal')
@@ -135,10 +105,12 @@ def crawl_web_for_files(starting_URL, wanted_ext=WANTED_EXT, do_dl=False, do_jou
 
 
 def controlled_sleep(seconds=1, do_random_wait=False):
+	""" Will wait the given number of seconds (or a random one between 1 and it). """
 	sleep(randint(1, seconds) if do_random_wait else seconds)
 
 
 def download_file(URL, do_wait=False, do_random_wait=False):
+	""" Will directly retrieve and write in the current folder the pointed URL. """
 	if do_wait:
 		controlled_sleep(do_wait, do_random_wait)
 
@@ -147,6 +119,7 @@ def download_file(URL, do_wait=False, do_random_wait=False):
 
 
 def download_files(URLs_file, do_wait=False, do_random_wait=False):
+	""" Will download files which URL are listed in the pointed file. """
 	line_nb = 0
 	downloaded_files = 0
 
