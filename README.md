@@ -8,22 +8,18 @@ It can also be used to directly download a single file or a list files.
 
 ### Options
 * `--accept`: optional regular expression (case insensitive) to keep matching document names.
-
-Example : `--accept=jpe?g` will hopefully keep all : .JPG, .JPEG, .jpg, .jpeg
+  * Example : `--accept=jpe?g` will hopefully keep all : .JPG, .JPEG, .jpg, .jpeg
 * `--download`: directly download found documents if set, output their URL if not.
 * `--verbose`: creates a log file to keep trace of what was done.
 * `--wait`: will wait that number of seconds before each download (page or document) if set.
-
-Example : `--wait=5` will wait 5s before each download.
+  * Example : `--wait=5` will wait 5s before each download.
 * `--random-wait`: will randomly wait between 1 second and --wait seconds if set.
 * `--download-file`: Will directly retrieve and write in the current folder the pointed URL.
-
-Example : `--download-file url`
+  * Example : `--download-file url`
 * `--download-files`: will download files which URL are listed in the pointed file.
-
-Example : `--download-files url.lst`
+  * Example : `--download-files url.lst`
 
 ### Usage
 * `doc_crawler.py [--accept=jpe?g] [--download] [--verbose] [--wait=5] [--random-wait] http://…`
 * `doc_crawler.py [--wait=5] [--random-wait] --download-file http://…`
-* `doc_crawler.py [--wait=5] [--random-wait] --download-files url.lst
+* `doc_crawler.py [--wait=5] [--random-wait] --download-files url.lst`
