@@ -23,3 +23,11 @@ It can also be used to directly download a single file or a list files.
 * `doc_crawler.py [--accept=jpe?g] [--download] [--verbose] [--wait=5] [--random-wait] http://…`
 * `doc_crawler.py [--wait=5] [--random-wait] --download-file http://…`
 * `doc_crawler.py [--wait=5] [--random-wait] --download-files url.lst`
+
+## Requirements
+* cssselect
+* lxml
+* requests
+* yaml
+
+Under Debian : `apt install python3-cssselect python3-lxml python3-requests python3-yaml`
