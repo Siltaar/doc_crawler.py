@@ -1,5 +1,5 @@
 `doc_crawler.py` can explore a website recursively from a given URL and retrieve, in the
-descendant pages, the encountered document files (by default PDF, ODT, CSV, RTF, DOC and XLS)
+descendant pages, the encountered document files (by default: PDF, ODT, CSV, RTF, DOC and XLS)
 based on their extension.
 
 It can directly download found documents, or output their URL to pipe them somewhere else.
