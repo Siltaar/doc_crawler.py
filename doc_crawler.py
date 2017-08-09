@@ -33,15 +33,20 @@ LOGGING = """
 WANTED_EXT = '\.(pdf|docx?|xlsx?|od[ts]|csv|rtf)'
 
 
-def crawl_web_for_files(starting_URL, wanted_ext=WANTED_EXT, do_dl=False, do_journal=False,
+def doc_crawler(starting_URL, wanted_ext=WANTED_EXT, do_dl=False, do_journal=False,
 		do_wait=False, do_random_wait=False):
 	""" Explore a website recursively from a given URL and retrieve, in the descendant pages,
 	the encountered document files (by default PDF, ODT, CSV, RTF, DOC and XLS) based on their
 	extension.
 
 	It can directly download found documents, or output their URL to pipe them somewhere else.
+	It can also be used to directly download a single file or a list files.
 
-	It can also be used to directly download a single file or a list files."""
+	>>> doc_crawler('https://github.com/Siltaar/doc_crawler.py/blob/master/test/', 'txt')
+	https://github.com/Siltaar/doc_crawler.py/blob/master/test/test_a.txt
+	https://github.com/Siltaar/doc_crawler.py/blob/master/test/test_b.txt
+	https://github.com/Siltaar/doc_crawler.py/blob/master/test/test_c.txt
+	"""
 	if do_journal:
 		logging.config.dictConfig(yaml.load(LOGGING))
 		journal = logging.getLogger('journal')
@@ -110,7 +115,9 @@ def controlled_sleep(seconds=1, do_random_wait=False):
 
 
 def download_file(URL, do_wait=False, do_random_wait=False):
-	""" Will directly retrieve and write in the current folder the pointed URL. """
+	""" Will directly retrieve and write in the current folder the pointed URL.
+	>>> download_file('https://github.com/Siltaar/doc_crawler.py/blob/master/test/test_a.txt')
+	"""
 	if do_wait:
 		controlled_sleep(do_wait, do_random_wait)
 
@@ -119,7 +126,13 @@ def download_file(URL, do_wait=False, do_random_wait=False):
 
 
 def download_files(URLs_file, do_wait=False, do_random_wait=False):
-	""" Will download files which URL are listed in the pointed file. """
+	""" Will download files which URL are listed in the pointed file.
+	>>> dowload_files('test/test_doc.lst')
+	download 1 - https://github.com/Siltaar/doc_crawler.py/blob/master/test/test_a.txt
+	download 2 - https://github.com/Siltaar/doc_crawler.py/blob/master/test/test_b.txt
+	download 3 - https://github.com/Siltaar/doc_crawler.py/blob/master/test/test_c.txt
+	downloaded 3 / 3
+	"""
 	line_nb = 0
 	downloaded_files = 0
 
@@ -187,4 +200,4 @@ if __name__ == '__main__':
 	if len(argv) < 2:
 		raise SystemExit("Missing argument\n"+USAGE)
 
-	crawl_web_for_files(argv[-1], regext, do_dl, do_journal)
+	doc_crawler(argv[-1], regext, do_dl, do_journal)
