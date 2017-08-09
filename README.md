@@ -1,6 +1,6 @@
 `doc_crawler.py` can explore a website recursively from a given URL and retrieve, in the
 descendant pages, the encountered document files (by default: PDF, ODT, CSV, RTF, DOC and XLS)
-based on their extension.
+based on regular expression maching (typically against their extension).
 
 It can directly download found documents, or output their URL to pipe them somewhere else.
 
@@ -8,7 +8,7 @@ It can also be used to directly download a single file or a list files.
 
 ## Options
 `--accept` optional regular expression (case insensitive) to keep matching document names. \
- Example : `--accept=jpe?g` will hopefully keep all : .JPG, .JPEG, .jpg, .jpeg \
+ Example : `--accept=jpe?g$` will hopefully keep all : .JPG, .JPEG, .jpg, .jpeg \
 `--download` directly download found documents if set, output their URL if not. \
 `--verbose` creates a log file to keep trace of what was done. \
 `--wait` will wait that number of seconds before each download (page or document) if set. \
@@ -23,6 +23,12 @@ It can also be used to directly download a single file or a list files.
 `doc_crawler.py [--accept=jpe?g] [--download] [--verbose] [--wait=5] [--random-wait] http://…` \
 `doc_crawler.py [--wait=5] [--random-wait] --download-file http://…` \
 `doc_crawler.py [--wait=5] [--random-wait] --download-files url.lst`
+
+## Test
+`doc_crawler.py` includes doctests that you can run with the following command in the cloned repository root: \
+`python3 -m doctest doc_crawler.py`
+
+It should be no output.
 
 ## Requirements
 * cssselect

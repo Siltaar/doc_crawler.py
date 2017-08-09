@@ -30,7 +30,7 @@ LOGGING = """
 			handlers: ['results']
 			level: DEBUG
 """.format(cur_dt=datetime.datetime.now().isoformat())
-WANTED_EXT = '\.(pdf|docx?|xlsx?|od[ts]|csv|rtf)'
+WANTED_EXT = '\.(pdf|docx?|xlsx?|od[ts]|csv|rtf)$'
 
 
 def doc_crawler(starting_URL, wanted_ext=WANTED_EXT, do_dl=False, do_journal=False,
@@ -42,16 +42,15 @@ def doc_crawler(starting_URL, wanted_ext=WANTED_EXT, do_dl=False, do_journal=Fal
 	It can directly download found documents, or output their URL to pipe them somewhere else.
 	It can also be used to directly download a single file or a list files.
 
-	>>> doc_crawler('https://github.com/Siltaar/doc_crawler.py/blob/master/test/', 'txt')
-	https://github.com/Siltaar/doc_crawler.py/blob/master/test/test_a.txt
-	https://github.com/Siltaar/doc_crawler.py/blob/master/test/test_b.txt
-	https://github.com/Siltaar/doc_crawler.py/blob/master/test/test_c.txt
+>>> doc_crawler('https://github.com/Siltaar/doc_crawler.py/blob/master/test/test_a.txt',
+... '/raw/', do_wait=1)
+https://github.com/Siltaar/doc_crawler.py/raw/master/test/test_a.txt
 	"""
 	if do_journal:
 		logging.config.dictConfig(yaml.load(LOGGING))
 		journal = logging.getLogger('journal')
 
-	BIN_EXT = '\.?(jpe?g|png|gif|swf)'
+	BIN_EXT = '\.?(jpe?g|png|gif|swf)$'
 	found_pages_list = [starting_URL]
 	found_pages_set = set(found_pages_list)
 	regurgited_pages = set()
@@ -77,13 +76,12 @@ def doc_crawler(starting_URL, wanted_ext=WANTED_EXT, do_dl=False, do_journal=Fal
 
 		for a in tree.cssselect('a'):  # explore current page links
 			a_href = a.get('href', '')
-			a_href_ext = a_href[-4:]
 
 			if not re.search('^https?://', a_href):  # if it's a relative link
 				a_href = urljoin(f, a_href)
 
 			# is it a link to a wanted doc ?
-			if re.search(wanted_ext, a_href_ext, re.I) and a_href not in caught_docs:
+			if re.search(wanted_ext, a_href, re.I) and a_href not in caught_docs:
 				caught_docs.add(a_href)
 
 				if do_dl:
@@ -92,7 +90,7 @@ def doc_crawler(starting_URL, wanted_ext=WANTED_EXT, do_dl=False, do_journal=Fal
 					print(a_href)
 
 			# else is it an internal link and not an image or other unparsable files
-			elif starting_URL in a_href and not re.search(BIN_EXT, a_href_ext, re.I):
+			elif starting_URL in a_href and not re.search(BIN_EXT, a_href, re.I):
 				if a_href not in found_pages_set:
 					if do_journal:
 						journal.info("will explore "+a_href)
@@ -127,7 +125,7 @@ def download_file(URL, do_wait=False, do_random_wait=False):
 
 def download_files(URLs_file, do_wait=False, do_random_wait=False):
 	""" Will download files which URL are listed in the pointed file.
-	>>> dowload_files('test/test_doc.lst')
+	>>> download_files('test/test_doc.lst')
 	download 1 - https://github.com/Siltaar/doc_crawler.py/blob/master/test/test_a.txt
 	download 2 - https://github.com/Siltaar/doc_crawler.py/blob/master/test/test_b.txt
 	download 3 - https://github.com/Siltaar/doc_crawler.py/blob/master/test/test_c.txt
@@ -138,6 +136,8 @@ def download_files(URLs_file, do_wait=False, do_random_wait=False):
 
 	with open(URLs_file) as f:
 		for line in f:
+			line = line.rstrip('\n')
+
 			if line is '':
 				continue
 
