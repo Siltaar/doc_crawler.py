@@ -34,4 +34,4 @@ It should be no output.
 * requests
 * yaml
 
-One can install them Under Debian using the following command : `apt install python3-cssselect python3-lxml python3-requests python3-yaml`
+One can install them Under Debian using the following command : `apt install python3-requests python3-yaml`
