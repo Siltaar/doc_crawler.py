@@ -24,15 +24,15 @@ black-listed). This behavior can be disabled (with a `--no-random-wait` and/or `
 `--wait=x` change the default waiting time before each download (page or document). \
  Example : `--wait=3` will wait between 1 and 3s before each download. Default is 5.\
 `--no-random-wait` stops the random pick up of waiting times. `--wait=` or default is used.\
-`--download-file` will directly save in the current folder the URL-pointed document. \
- Example : `--download-file http://…` \
 `--download-files` will download each documents which URL are listed in the given file. \
  Example : `--download-files url.lst`
+`--download-file` will directly save in the current folder the URL-pointed document. \
+ Example : `--download-file http://…` \
 
 ## Usage
 `doc_crawler.py [--accept=jpe?g] [--download] [--single-page] [--verbose] http://…` \
-`doc_crawler.py [--wait=3] [--no-random-wait] --download-file http://…` \
 `doc_crawler.py [--wait=0] --download-files url.lst`
+`doc_crawler.py [--wait=3] [--no-random-wait] --download-file http://…` \
 
 ## Test
 `doc_crawler.py` includes around 20 doctests that you can run with the following command in the cloned repository root: \
