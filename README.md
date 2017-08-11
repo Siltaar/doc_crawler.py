@@ -2,17 +2,18 @@
 descendant pages, the encountered document files (by default: PDF, ODT, CSV, RTF, DOC and XLS)
 based on regular expression matching (typically against their extension).
 
-Documents can be listed to the output or downloaded (with the --download argument).
+Documents can be listed to the output or downloaded (with the `--download` argument).
 
-To address real life situation, one can log activity and follow the progress (with --verbose).
-Also, the search can be limited to a single page (with the --single_page argument).
+To address real life situation, one can log activity and follow the progress (with `--verbose`). \
+Also, the search can be limited to a single page (with the `--single-page` argument).
 
 Else, documents can be downloaded from a given list of URL (that one may have previously
 produced using `doc_crawler`, and one can finish the work downloading documents one by one if
 necessary.
 
-By default, the program waits a randomly-pick amount of seconds, between 1 and 5. This behavior
-can be disabled (with a --no-random-wait and/or --wait=0 argument).
+By default, the program waits a randomly-pick amount of seconds, between 1 and 5, before each
+download to avoid being rude toward the webserver `doc_crawler` interact with (and so avoid to be
+black-listed). This behavior can be disabled (with a `--no-random-wait` and/or `--wait=0` argument).
 
 ## Options
 `--accept` optional regular expression (case insensitive) to keep matching document names. \
@@ -34,7 +35,7 @@ can be disabled (with a --no-random-wait and/or --wait=0 argument).
 `doc_crawler.py [--wait=0] --download-files url.lst`
 
 ## Test
-`doc_crawler.py` includes doctests that you can run with the following command in the cloned repository root: \
+`doc_crawler.py` includes around 20 doctests that you can run with the following command in the cloned repository root: \
 `python3 -m doctest doc_crawler.py`
 
 It should be no output.
