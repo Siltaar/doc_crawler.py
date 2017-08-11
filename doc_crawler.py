@@ -12,6 +12,24 @@ from urllib.parse import urljoin
 import requests, re, logging, logging.config, yaml, datetime
 
 
+"""  Explore a website recursively from a given URL and download all the documents matching
+a regular expression.
+
+Documents can be listed to the output or downloaded (with the --download argument).
+
+To address real life situation, one can log activity and follow the progress (with --verbose).
+Also, the search can be limited to a single page (with the --single_page argument).
+
+Else, documents can be downloaded from a given list of URL (that one may have previously
+produced using `doc_crawler`, and one can finish the work downloading documents one by one if
+necessary.
+
+By default, the program waits a randomly-pick amount of seconds, between 1 and 5. This behavior
+can be disabled (with a --no-random-wait and/or --wait=0 argument).
+"""
+
+__all__ = ['doc_crawler', 'download_file', 'download_files']
+__version__ = '1.0'
 LOGGING = """
 	version: 1
 	disable_existing_loggers: False
@@ -34,17 +52,19 @@ BIN_EXT = '\.?(jpe?g|png|gif|swf)$'
 
 
 def doc_crawler(base_url, wanted_ext=WANTED_EXT, do_dl=False, do_journal=False,
-		do_wait=False, do_random_wait=False):
-	""" Explore a website recursively from a given URL and retrieve, in the descendant pages,
-	the encountered document files (by default PDF, ODT, CSV, RTF, DOC and XLS) based on their
-	extension.
-
-	It can directly download found documents, or output their URL to pipe them somewhere else.
-	It can also be used to directly download a single file or a list files.
-
->>> doc_crawler('https://github.com/Siltaar/doc_crawler.py/blob/master/test/test_a.txt',
-... '/raw/', do_wait=1)
-https://github.com/Siltaar/doc_crawler.py/raw/master/test/test_a.txt
+		do_wait=False, do_random_wait=False, single_page=False):
+	"""
+	>>> doc_crawler('https://github.com/Siltaar/doc_crawler.py/blob/master/test/',
+	... '/raw/', do_wait=1)
+	https://github.com/Siltaar/doc_crawler.py/raw/master/test/test_a.txt
+	https://github.com/Siltaar/doc_crawler.py/raw/master/test/test_b.txt
+	https://github.com/Siltaar/doc_crawler.py/raw/master/test/test_c.txt
+	https://github.com/Siltaar/doc_crawler.py/raw/master/test/test_doc.lst
+	>>> doc_crawler('https://github.com/Siltaar/doc_crawler.py/blob/master/test/',
+	... '/raw/', do_wait=0, single_page=1)
+	>>> doc_crawler('https://github.com/Siltaar/doc_crawler.py/blob/master/test/test_a.txt',
+	... '/raw/', single_page=1)
+	https://github.com/Siltaar/doc_crawler.py/raw/master/test/test_a.txt
 	"""
 	journal = 0
 
@@ -71,6 +91,9 @@ https://github.com/Siltaar/doc_crawler.py/raw/master/test/test_a.txt
 		found_pages_list, found_pages_set, regurgited_pages, caught_docs = explore_page(
 			base_url, page_url, str(page.content), wanted_ext, journal, do_dl,
 			found_pages_list, found_pages_set, regurgited_pages, caught_docs)
+
+		if single_page:
+			break
 
 	if do_journal:
 		journal.info("found %d pages, %d doc(s)" % (len(found_pages_set), len(caught_docs)))
@@ -182,15 +205,16 @@ def download_files(URLs_file, do_wait=False, do_random_wait=False):
 
 if __name__ == '__main__':
 	USAGE = """Usage:
-	doc_crawler.py [--accept=jpe?g] [--download] [--verbose] [--wait=5] [--random-wait] http://…
-	doc_crawler.py [--wait=5] [--random-wait] --download-file http://…
-	doc_crawler.py [--wait=5] [--random-wait] --download-files url.lst
+	doc_crawler.py [--accept=jpe?g] [--download] [--single-page] [--verbose] http://…
+	doc_crawler.py [--wait=3] [--no-random-wait] --download-files url.lst
+	doc_crawler.py [--wait=0] --download-file http://…
 	"""
 	regext = WANTED_EXT
 	do_dl = False
 	do_journal = False
-	do_wait = False
-	do_random_wait = False
+	do_wait = 5
+	do_random_wait = True
+	single_page = False
 
 	for i, arg in enumerate(argv):
 		if i == 0:  # 1st arg of argv is the program name
@@ -199,13 +223,14 @@ if __name__ == '__main__':
 			regext = arg[len('--accept='):]
 		elif arg == '--download':
 			do_dl = True
+		elif arg == '--single-page':
+			single_page = True
 		elif arg == '--verbose':
 			do_journal = True
 		elif arg.startswith('--wait'):
 			do_wait = int(arg[len('--wait='):])
-		elif arg == '--random-wait':
-			do_wait = 5
-			do_random_wait = True
+		elif arg == '--no-random-wait':
+			do_random_wait = False
 		elif arg.startswith('http'):
 			continue
 		elif arg == '--download-file':
@@ -232,4 +257,4 @@ if __name__ == '__main__':
 	if len(argv) < 2:
 		raise SystemExit("Missing argument\n"+USAGE)
 
-	doc_crawler(argv[-1], regext, do_dl, do_journal)
+	doc_crawler(argv[-1], regext, do_dl, do_journal, single_page)

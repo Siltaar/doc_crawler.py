@@ -1,28 +1,37 @@
-`doc_crawler.py` can explore a website recursively from a given URL and retrieve, in the
+`doc_crawler` can explore a website recursively from a given URL and retrieve, in the
 descendant pages, the encountered document files (by default: PDF, ODT, CSV, RTF, DOC and XLS)
-based on regular expression maching (typically against their extension).
+based on regular expression matching (typically against their extension).
 
-It can directly download found documents, or output their URL to pipe them somewhere else.
+Documents can be listed to the output or downloaded (with the --download argument).
 
-It can also be used to directly download a single file or a list files.
+To address real life situation, one can log activity and follow the progress (with --verbose).
+Also, the search can be limited to a single page (with the --single_page argument).
+
+Else, documents can be downloaded from a given list of URL (that one may have previously
+produced using `doc_crawler`, and one can finish the work downloading documents one by one if
+necessary.
+
+By default, the program waits a randomly-pick amount of seconds, between 1 and 5. This behavior
+can be disabled (with a --no-random-wait and/or --wait=0 argument).
 
 ## Options
 `--accept` optional regular expression (case insensitive) to keep matching document names. \
  Example : `--accept=jpe?g$` will hopefully keep all : .JPG, .JPEG, .jpg, .jpeg \
-`--download` directly download found documents if set, output their URL if not. \
+`--download` directly downloads found documents if set, output their URL if not. \
+`--single-page` limits the search for documents to download to the giver URL. \
 `--verbose` creates a log file to keep trace of what was done. \
-`--wait` will wait that number of seconds before each download (page or document) if set. \
- Example : `--wait=5` will wait 5s before each download. \
-`--random-wait` will randomly wait between 1 second and --wait seconds if set. \
-`--download-file` Will directly retrieve and write in the current folder the pointed URL. \
- Example : `--download-file url` \
-`--download-files` will download files which URL are listed in the pointed file. \
+`--wait=x` change the default waiting time before each download (page or document). \
+ Example : `--wait=3` will wait between 1 and 3s before each download. Default is 5.\
+`--no-random-wait` stops the random pick up of waiting times. `--wait=` or default is used.\
+`--download-file` will directly save in the current folder the URL-pointed document. \
+ Example : `--download-file http://…` \
+`--download-files` will download each documents which URL are listed in the given file. \
  Example : `--download-files url.lst`
 
 ## Usage
-`doc_crawler.py [--accept=jpe?g] [--download] [--verbose] [--wait=5] [--random-wait] http://…` \
-`doc_crawler.py [--wait=5] [--random-wait] --download-file http://…` \
-`doc_crawler.py [--wait=5] [--random-wait] --download-files url.lst`
+`doc_crawler.py [--accept=jpe?g] [--download] [--single-page] [--verbose] http://…` \
+`doc_crawler.py [--wait=3] [--no-random-wait] --download-file http://…` \
+`doc_crawler.py [--wait=0] --download-files url.lst`
 
 ## Test
 `doc_crawler.py` includes doctests that you can run with the following command in the cloned repository root: \
