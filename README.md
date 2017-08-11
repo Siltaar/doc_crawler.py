@@ -8,7 +8,7 @@ To address real life situation, one can log activity and follow the progress (wi
 Also, the search can be limited to a single page (with the `--single-page` argument).
 
 Else, documents can be downloaded from a given list of URL (that one may have previously
-produced using `doc_crawler`, and one can finish the work downloading documents one by one if
+produced using `doc_crawler`), and one can finish the work downloading documents one by one if
 necessary.
 
 By default, the program waits a randomly-pick amount of seconds, between 1 and 5, before each
