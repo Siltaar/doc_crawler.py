@@ -29,12 +29,12 @@ black-listed). This behavior can be disabled (with a `--no-random-wait` and/or `
 `--download-file` will directly save in the current folder the URL-pointed document. \
  Example : `--download-file http://…` \
 
-## Usage
+## Usages
 `doc_crawler.py [--accept=jpe?g] [--download] [--single-page] [--verbose] http://…` \
 `doc_crawler.py [--wait=3] [--no-random-wait] --download-files url.lst` \
 `doc_crawler.py [--wait=0] --download-file http://…`
 
-## Test
+## Tests
 `doc_crawler.py` includes around 20 doctests that you can run with the following command in the cloned repository root: \
 `python3 -m doctest doc_crawler.py`
 
