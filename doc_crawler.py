@@ -6,7 +6,6 @@
 # Licence: GPLv3
 
 from sys import argv, stderr
-from lxml import html
 from random import randint
 from time import sleep
 from urllib.parse import urljoin
@@ -31,9 +30,10 @@ LOGGING = """
 			level: DEBUG
 """.format(cur_dt=datetime.datetime.now().isoformat())
 WANTED_EXT = '\.(pdf|docx?|xlsx?|od[ts]|csv|rtf)$'
+BIN_EXT = '\.?(jpe?g|png|gif|swf)$'
 
 
-def doc_crawler(starting_URL, wanted_ext=WANTED_EXT, do_dl=False, do_journal=False,
+def doc_crawler(base_url, wanted_ext=WANTED_EXT, do_dl=False, do_journal=False,
 		do_wait=False, do_random_wait=False):
 	""" Explore a website recursively from a given URL and retrieve, in the descendant pages,
 	the encountered document files (by default PDF, ODT, CSV, RTF, DOC and XLS) based on their
@@ -46,65 +46,94 @@ def doc_crawler(starting_URL, wanted_ext=WANTED_EXT, do_dl=False, do_journal=Fal
 ... '/raw/', do_wait=1)
 https://github.com/Siltaar/doc_crawler.py/raw/master/test/test_a.txt
 	"""
+	journal = 0
+
 	if do_journal:
 		logging.config.dictConfig(yaml.load(LOGGING))
 		journal = logging.getLogger('journal')
 
-	BIN_EXT = '\.?(jpe?g|png|gif|swf)$'
-	found_pages_list = [starting_URL]
+	found_pages_list = [base_url]
 	found_pages_set = set(found_pages_list)
 	regurgited_pages = set()
 	caught_docs = set()
 
-	for f in found_pages_list:
-		if do_wait:
-			controlled_sleep(do_wait, do_random_wait)
-
-		if do_journal:
-			journal.info("tries page " + f)
+	for page_url in found_pages_list:
+		do_wait and controlled_sleep(do_wait, do_random_wait)
+		do_journal and journal.info("tries page " + page_url)
 
 		try:
-			page = requests.get(f)
+			page = requests.get(page_url)
 		except Exception as e:
-			if do_journal:
-				journal.error(e)
-
+			do_journal and journal.error(e)
 			stderr(e)
 			continue
 
-		tree = html.fromstring(page.content)
-
-		for a in tree.cssselect('a'):  # explore current page links
-			a_href = a.get('href', '')
-
-			if not re.search('^https?://', a_href):  # if it's a relative link
-				a_href = urljoin(f, a_href)
-
-			# is it a link to a wanted doc ?
-			if re.search(wanted_ext, a_href, re.I) and a_href not in caught_docs:
-				caught_docs.add(a_href)
-
-				if do_dl:
-					download_file(a_href)
-				else:
-					print(a_href)
-
-			# else is it an internal link and not an image or other unparsable files
-			elif starting_URL in a_href and not re.search(BIN_EXT, a_href, re.I):
-				if a_href not in found_pages_set:
-					if do_journal:
-						journal.info("will explore "+a_href)
-
-					found_pages_list.append(a_href)
-					found_pages_set.add(a_href)
-			elif a_href not in regurgited_pages:
-				if do_journal:
-					journal.debug("regurgited link "+a_href)
-
-				regurgited_pages.add(a_href)
+		found_pages_list, found_pages_set, regurgited_pages, caught_docs = explore_page(
+			base_url, page_url, str(page.content), wanted_ext, journal, do_dl,
+			found_pages_list, found_pages_set, regurgited_pages, caught_docs)
 
 	if do_journal:
 		journal.info("found %d pages, %d doc(s)" % (len(found_pages_set), len(caught_docs)))
+
+
+def explore_page(base_url, page_url, page_str, wanted_ext, journal, do_dl,
+		found_pages_list, found_pages_set, regurgited_pages, caught_docs):
+	"""
+	>>> W = WANTED_EXT
+	>>> ht = 'http://'
+	>>> explore_page('', '', '', WANTED_EXT, 0, 0, [], set(), set(), set())
+	([], set(), set(), set())
+	>>> explore_page('http://a.fr','http://a.fr/b','href="c.htm"', W,0,0,[],set(),set(),set())
+	(['http://a.fr/c.htm'], {'http://a.fr/c.htm'}, set(), set())
+	>>> explore_page('http://a.fr','http://a.fr/b','href="c.pdf"', W,0,0,[],set(),set(),set())
+	http://a.fr/c.pdf
+	([], set(), set(), {'http://a.fr/c.pdf'})
+	>>> explore_page('http://a.fr','http://a.fr/b','href="c.JPG"', W,0,0,[],set(),set(),set())
+	([], set(), {'http://a.fr/c.JPG'}, set())
+	>>> explore_page('http://a.fr','http://a.fr/b','href="httpc"', W,0,0,[],set(),set(),set())
+	(['http://a.fr/httpc'], {'http://a.fr/httpc'}, set(), set())
+	>>> explore_page('http://a.fr','http://a.fr/b/c','href="d"',   W,0,0,[],set(),set(),set())
+	(['http://a.fr/b/d'], {'http://a.fr/b/d'}, set(), set())
+	>>> explore_page(ht+'a.fr','http://a.fr','href="b"href="c"',   W,0,0,[],set(),set(),set())
+	... # doctest: +ELLIPSIS
+	(['http://a.fr/b', 'http://a.fr/c'], {...}, set(), set())
+	>>> explore_page(ht+'a.fr',ht+'a.fr','href="http://a.fr/b"',   W,0,0,[],set(),set(),set())
+	(['http://a.fr/b'], {'http://a.fr/b'}, set(), set())
+	>>> explore_page(ht+'a.fr',ht+'a.fr','href="'+ht+'a.fr/b.pdf"',W,0,0,[],set(),set(),set())
+	http://a.fr/b.pdf
+	([], set(), set(), {'http://a.fr/b.pdf'})
+	>>> explore_page(ht+'a.fr','http://a.fr','href=""', W,0,0,[],set([ht+'a.fr']),set(),set())
+	([], {'http://a.fr'}, set(), set())
+	>>> explore_page(ht+'a.fr',ht+'a.fr','href="javascript:;"',	   W,0,0,[],set(),set(),set())
+	([], set(), {'javascript:;'}, set())
+	>>> explore_page(ht+'a.fr',ht+'a.fr','href="mailto:a@a.fr"',   W,0,0,[],set(),set(),set())
+	([], set(), {'mailto:a@a.fr'}, set())
+	>>> explore_page('http://a.fr','http://a.fr/b/','href="c/d"',  W,0,0,[],set(),set(),set())
+	(['http://a.fr/b/c/d'], {'http://a.fr/b/c/d'}, set(), set())
+	>>> explore_page('http://a.fr','http://a.fr/?b=c','href="d"',  W,0,0,[],set(),set(),set())
+	(['http://a.fr/d'], {'http://a.fr/d'}, set(), set())
+	>>> explore_page(ht+'a.fr','http://a.fr/?b=c','href="?d=e"',   W,0,0,[],set(),set(),set())
+	(['http://a.fr/?d=e'], {'http://a.fr/?d=e'}, set(), set())
+	"""
+	for a_href in re.finditer('href="(.*?)"', page_str, re.I):  # extract links
+		a_href = a_href.group(1)
+
+		if not re.search('^https?://', a_href):  # if it's a relative link
+			a_href = urljoin(page_url, a_href)
+
+		if re.search(wanted_ext, a_href, re.I) and a_href not in caught_docs:  # wanted doc ?
+			caught_docs.add(a_href)
+			do_dl and download_file(a_href) or print(a_href)
+		elif base_url in a_href and not re.search(BIN_EXT, a_href, re.I):  # next page ?
+			if a_href not in found_pages_set:
+				journal and journal.info("will explore "+a_href)
+				found_pages_list.append(a_href)
+				found_pages_set.add(a_href)
+		elif a_href not in regurgited_pages:  # junk link ?
+			journal and journal.debug("regurgited link "+a_href)
+			regurgited_pages.add(a_href)
+
+	return found_pages_list, found_pages_set, regurgited_pages, caught_docs
 
 
 def controlled_sleep(seconds=1, do_random_wait=False):
@@ -116,9 +145,7 @@ def download_file(URL, do_wait=False, do_random_wait=False):
 	""" Will directly retrieve and write in the current folder the pointed URL.
 	>>> download_file('https://github.com/Siltaar/doc_crawler.py/blob/master/test/test_a.txt')
 	"""
-	if do_wait:
-		controlled_sleep(do_wait, do_random_wait)
-
+	do_wait and controlled_sleep(do_wait, do_random_wait)
 	with open(URL.split('/')[-1], 'wb') as f:
 		f.write(requests.get(URL, stream=True).content)
 
@@ -155,10 +182,10 @@ def download_files(URLs_file, do_wait=False, do_random_wait=False):
 
 if __name__ == '__main__':
 	USAGE = """Usage:
-	{name} [--accept=jpe?g] [--download] [--verbose] [--wait=5] [--random-wait] http://…
-	{name} [--wait=5] [--random-wait] --download-file http://…
-	{name} [--wait=5] [--random-wait] --download-files url.lst
-	""".format(name=argv[0])
+	doc_crawler.py [--accept=jpe?g] [--download] [--verbose] [--wait=5] [--random-wait] http://…
+	doc_crawler.py [--wait=5] [--random-wait] --download-file http://…
+	doc_crawler.py [--wait=5] [--random-wait] --download-files url.lst
+	"""
 	regext = WANTED_EXT
 	do_dl = False
 	do_journal = False
@@ -177,6 +204,7 @@ if __name__ == '__main__':
 		elif arg.startswith('--wait'):
 			do_wait = int(arg[len('--wait='):])
 		elif arg == '--random-wait':
+			do_wait = 5
 			do_random_wait = True
 		elif arg.startswith('http'):
 			continue
@@ -194,6 +222,10 @@ if __name__ == '__main__':
 				raise SystemExit
 		elif arg == '--help':
 			raise SystemExit(USAGE)
+		elif arg.startswith('--test'):
+			import doctest
+			doctest.run_docstring_examples(globals()[arg[len('--test='):]], globals())
+			raise SystemExit()
 		else:
 			raise SystemExit("Unrecognized argument: "+arg+"\n"+USAGE)
 

@@ -31,8 +31,6 @@ It can also be used to directly download a single file or a list files.
 It should be no output.
 
 ## Requirements
-* cssselect
-* lxml
 * requests
 * yaml
 
