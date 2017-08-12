@@ -4,16 +4,17 @@ based on regular expression matching (typically against their extension).
 
 Documents can be listed to the output or downloaded (with the `--download` argument).
 
-To address real life situation, one can log activity and follow the progress (with `--verbose`). \
-Also, the search can be limited to a single page (with the `--single-page` argument).
+To address real life situations, one can log activity and follow the progress (with `--verbose`). \
+Also, the search can be limited to one page (with the `--single-page` argument).
 
 Else, documents can be downloaded from a given list of URL (that one may have previously
-produced using `doc_crawler`), and one can finish the work downloading documents one by one if
-necessary.
+produced using default options of `doc_crawler` and an output redirection such as :
+`./doc_crawler.py http://… > url.lst`), and one can finish the work downloading documents
+one by one if necessary (so `doc_crawler` will assist you at every steps.
 
 By default, the program waits a randomly-pick amount of seconds, between 1 and 5, before each
-download to avoid being rude toward the webserver `doc_crawler` interact with (and so avoid to be
-black-listed). This behavior can be disabled (with a `--no-random-wait` and/or `--wait=0` argument).
+download to avoid being rude toward the webserver it interact with (and so avoid to be black-listed).
+This behavior can be disabled (with a `--no-random-wait` and/or a `--wait=0` argument).
 
 ## Options
 `--accept` optional regular expression (case insensitive) to keep matching document names. \
@@ -34,11 +35,14 @@ black-listed). This behavior can be disabled (with a `--no-random-wait` and/or `
 `doc_crawler.py [--wait=3] [--no-random-wait] --download-files url.lst` \
 `doc_crawler.py [--wait=0] --download-file http://…`
 
+Those examples can be mixed up.
+
 ## Tests
-`doc_crawler.py` includes around 20 doctests that you can run with the following command in the cloned repository root: \
+Around 20 doctests are included in `doc_crawler.py`. You can run with the following command in the
+cloned repository root to launch them: \
 `python3 -m doctest doc_crawler.py`
 
-It should be no output.
+It should output nothing.
 
 ## Requirements
 * requests
