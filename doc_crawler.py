@@ -43,8 +43,8 @@ LOGGING = """
 			filename: {cur_dt}_journal.log
 			encoding: utf-8
 	loggers:
-		results:
-			handlers: ['results']
+		journal:
+			handlers: ['journal']
 			level: DEBUG
 """.format(cur_dt=datetime.datetime.now().isoformat())
 WANTED_EXT = '\.(pdf|docx?|xlsx?|od[ts]|csv|rtf)$'
