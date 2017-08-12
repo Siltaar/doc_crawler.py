@@ -2,15 +2,18 @@
 descendant pages, the encountered document files (by default: PDF, ODT, CSV, RTF, DOC and XLS)
 based on regular expression matching (typically against their extension).
 
+## Features
 Documents can be listed to the output or downloaded (with the `--download` argument).
 
 To address real life situations, one can log activity and follow the progress (with `--verbose`). \
 Also, the search can be limited to one page (with the `--single-page` argument).
 
-Else, documents can be downloaded from a given list of URL (that one may have previously
-produced using default options of `doc_crawler` and an output redirection such as :
-`./doc_crawler.py http://… > url.lst`), and one can finish the work downloading documents
-one by one if necessary (so `doc_crawler` will assist you at every steps.
+Else, documents can be downloaded from a given list of URL, that one may have previously
+produced using default options of `doc_crawler` and an output redirection such as: \
+`./doc_crawler.py http://… > url.lst`.
+
+To finish the work, documents can be downloaded one by one if necessary, using the `--download-file`
+argument, which makes `doc_crawler` a tool sufficient by itself to assist you at every steps.
 
 By default, the program waits a randomly-pick amount of seconds, between 1 and 5, before each
 download to avoid being rude toward the webserver it interact with (and so avoid to be black-listed).
