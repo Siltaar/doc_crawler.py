@@ -38,7 +38,8 @@ This behavior can be disabled (with a `--no-random-wait` and/or a `--wait=0` arg
 `doc_crawler.py [--wait=3] [--no-random-wait] --download-files url.lst` \
 `doc_crawler.py [--wait=0] --download-file http://…`
 
-Those examples can be mixed up.
+The arguments of those examples can be mixed up. \
+`doc_crawler.py` works great with Tor : `torsocks doc_crawler.py http://…`
 
 ## Tests
 Around 20 doctests are included in `doc_crawler.py`. You can run with the following command in the
