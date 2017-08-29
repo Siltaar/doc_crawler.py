@@ -53,3 +53,6 @@ It should output nothing.
 * yaml
 
 One can install them Under Debian using the following command : `apt install python3-requests python3-yaml`
+
+## Licence
+GNU General Public License v3.0 See LICENCE file.

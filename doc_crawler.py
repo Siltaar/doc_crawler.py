@@ -17,18 +17,18 @@ a regular expression.
 
 Documents can be listed to the output or downloaded (with the --download argument).
 
-To address real life situation, one can log activity and follow the progress (with --verbose).
-Also, the search can be limited to a single page (with the --single_page argument).
+To address real life situations, one can log activity and follow the progress (with --verbose).
+Also, the search can be limited to a single page (with the --single-page argument).
 
 Else, documents can be downloaded from a given list of URL (that one may have previously
 produced using `doc_crawler`, and one can finish the work downloading documents one by one if
 necessary.
 
-By default, the program waits a randomly-pick amount of seconds, between 1 and 5. This behavior
-can be disabled (with a --no-random-wait and/or --wait=0 argument).
+By default, the program waits a randomly - pick amount of seconds, between 1 and 5 before each
+downloads. This behavior can be disabled (with a --no-random-wait and/or --wait=0 argument).
 """
 
-__all__ = ['doc_crawler', 'download_file', 'download_files']
+__all__ = ['doc_crawler', 'download_files', 'download_file']
 __version__ = '1.0'
 LOGGING = """
 	version: 1
@@ -160,12 +160,12 @@ def explore_page(base_url, page_url, page_str, wanted_ext, journal, do_dl,
 
 
 def controlled_sleep(seconds=1, do_random_wait=False):
-	""" Will wait the given number of seconds (or a random one between 1 and it). """
+	""" Waits the given number of seconds (or a random one between 1 and it). """
 	sleep(randint(1, seconds) if do_random_wait else seconds)
 
 
 def download_file(URL, do_wait=False, do_random_wait=False):
-	""" Will directly retrieve and write in the current folder the pointed URL.
+	""" Directly retrieves and writes in the current folder the pointed URL.
 	>>> download_file('https://github.com/Siltaar/doc_crawler.py/blob/master/test/test_a.txt')
 	"""
 	do_wait and controlled_sleep(do_wait, do_random_wait)
@@ -174,7 +174,7 @@ def download_file(URL, do_wait=False, do_random_wait=False):
 
 
 def download_files(URLs_file, do_wait=False, do_random_wait=False):
-	""" Will download files which URL are listed in the pointed file.
+	""" Downloads files which URL are listed in the pointed file.
 	>>> download_files('test/test_doc.lst')
 	download 1 - https://github.com/Siltaar/doc_crawler.py/blob/master/test/test_a.txt
 	download 2 - https://github.com/Siltaar/doc_crawler.py/blob/master/test/test_b.txt
