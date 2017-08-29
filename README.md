@@ -39,10 +39,8 @@ This behavior can be disabled (with a `--no-random-wait` and/or a `--wait=0` arg
 `doc_crawler.py [--wait=0] --download-file http://…`
 
 `--wait=` and `--no-random-wait` arguments can be used with every form. \
-`doc_crawler.py` works great with Tor : `torsocks doc_crawler.py http://…`
-
-From a package installed via Pipy, one can invoke the doc_crawler command like this:\
-`python3 -m doc_crawler […] http://…`
+`doc_crawler.py` works great with Tor : `torsocks doc_crawler.py http://…`\
+For a `pip` installed `doc_crawler`, the command can be invoked as follow: `python3 -m doc_crawler […] http://…`
 
 ## Tests
 Around 20 doctests are included in `doc_crawler.py`. You can run them with the following
