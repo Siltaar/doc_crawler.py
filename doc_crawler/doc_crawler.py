@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
 # Name: doc_crawler.py
 # Author: Simon Descarpentries
 # Licence: GPLv3
@@ -28,7 +27,7 @@ By default, the program waits a randomly - pick amount of seconds, between 1 and
 downloads. This behavior can be disabled (with a --no-random-wait and/or --wait=0 argument).
 """
 
-__all__ = ['doc_crawler', 'download_files', 'download_file']
+__all__ = ['doc_crawler', 'download_files', 'download_file', 'run_cmd']
 __version__ = '1.0'
 LOGGING = """
 	version: 1
@@ -54,17 +53,15 @@ BIN_EXT = '\.?(jpe?g|png|gif|swf)$'
 def doc_crawler(base_url, wanted_ext=WANTED_EXT, do_dl=False, do_journal=False,
 		do_wait=False, do_random_wait=False, single_page=False):
 	"""
-	>>> doc_crawler('https://github.com/Siltaar/doc_crawler.py/blob/master/test/',
-	... '/raw/', do_wait=1)
-	https://github.com/Siltaar/doc_crawler.py/raw/master/test/test_a.txt
-	https://github.com/Siltaar/doc_crawler.py/raw/master/test/test_b.txt
-	https://github.com/Siltaar/doc_crawler.py/raw/master/test/test_c.txt
-	https://github.com/Siltaar/doc_crawler.py/raw/master/test/test_doc.lst
-	>>> doc_crawler('https://github.com/Siltaar/doc_crawler.py/blob/master/test/',
-	... '/raw/', do_wait=0, single_page=1)
-	>>> doc_crawler('https://github.com/Siltaar/doc_crawler.py/blob/master/test/test_a.txt',
-	... '/raw/', single_page=1)
-	https://github.com/Siltaar/doc_crawler.py/raw/master/test/test_a.txt
+	>>> url='https://github.com/Siltaar/doc_crawler.py/blob/master/doc_crawler/test/'
+	>>> doc_crawler(url, '/raw/', do_wait=1)  # doctest: +ELLIPSIS
+	https://.../raw/master/test/test_a.txt
+	https://.../raw/master/test/test_b.txt
+	https://.../raw/master/test/test_c.txt
+	https://.../raw/master/test/test_doc.lst
+	>>> doc_crawler(url, '/raw/', do_wait=0, single_page=1)
+	>>> doc_crawler(url+'test_a.txt', '/raw/', single_page=1)  # doctest: +ELLIPSIS
+	https://.../raw/master/test/test_a.txt
 	"""
 	journal = 0
 
@@ -175,10 +172,11 @@ def download_file(URL, do_wait=False, do_random_wait=False):
 
 def download_files(URLs_file, do_wait=False, do_random_wait=False):
 	""" Downloads files which URL are listed in the pointed file.
-	>>> download_files('test/test_doc.lst')
-	download 1 - https://github.com/Siltaar/doc_crawler.py/blob/master/test/test_a.txt
-	download 2 - https://github.com/Siltaar/doc_crawler.py/blob/master/test/test_b.txt
-	download 3 - https://github.com/Siltaar/doc_crawler.py/blob/master/test/test_c.txt
+	>>> url='https://github.com/Siltaar/doc_crawler.py/blob/master/doc_crawler/test/'
+	>>> download_files('test/test_doc.lst')  # doctest: +ELLIPSIS
+	download 1 - https://.../blob/master/test/test_a.txt
+	download 2 - https://.../blob/master/test/test_b.txt
+	download 3 - https://.../blob/master/test/test_c.txt
 	downloaded 3 / 3
 	"""
 	line_nb = 0
@@ -203,11 +201,15 @@ def download_files(URLs_file, do_wait=False, do_random_wait=False):
 	print('downloaded %d / %d' % (downloaded_files, line_nb))
 
 
-if __name__ == '__main__':
-	USAGE = """Usage:
+def run_cmd(argv):
+	USAGE = """\nUsages:
 	doc_crawler.py [--accept=jpe?g] [--download] [--single-page] [--verbose] http://…
 	doc_crawler.py [--wait=3] [--no-random-wait] --download-files url.lst
 	doc_crawler.py [--wait=0] --download-file http://…
+
+	or
+
+	python3 -m doc_crawler […] http://…
 	"""
 	regext = WANTED_EXT
 	do_dl = False
@@ -258,3 +260,7 @@ if __name__ == '__main__':
 		raise SystemExit("Missing argument\n"+USAGE)
 
 	doc_crawler(argv[-1], regext, do_dl, do_journal, single_page)
+
+
+if __name__ == '__main__':
+	run_cmd(argv)

@@ -38,15 +38,21 @@ This behavior can be disabled (with a `--no-random-wait` and/or a `--wait=0` arg
 `doc_crawler.py [--wait=3] [--no-random-wait] --download-files url.lst` \
 `doc_crawler.py [--wait=0] --download-file http://…`
 
-`--wait=` and `--no-random-wait` arguments can be used with every forms. \
+`--wait=` and `--no-random-wait` arguments can be used with every form. \
 `doc_crawler.py` works great with Tor : `torsocks doc_crawler.py http://…`
 
+From a package installed via Pipy, one can invoke the doc_crawler command like this:\
+`python3 -m doc_crawler […] http://…`
+
 ## Tests
-Around 20 doctests are included in `doc_crawler.py`. You can run them with the following command in the
-cloned repository root: \
+Around 20 doctests are included in `doc_crawler.py`. You can run them with the following
+command in the cloned repository root: \
 `python3 -m doctest doc_crawler.py`
 
-It should output nothing.
+Tests can also be launched one by one using the `--test=XXX` argument:\
+`python3 -m doc_crawler --test=download_file`
+
+Tests are successfully passed if nothing is output.
 
 ## Requirements
 * requests
@@ -55,4 +61,4 @@ It should output nothing.
 One can install them Under Debian using the following command : `apt install python3-requests python3-yaml`
 
 ## Licence
-GNU General Public License v3.0 See LICENCE file.
+GNU General Public License v3.0. See LICENCE file for more information.
