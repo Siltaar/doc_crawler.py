@@ -40,7 +40,7 @@ This behavior can be disabled (with a `--no-random-wait` and/or a `--wait=0` arg
 
 `--wait=` and `--no-random-wait` arguments can be used with every form. \
 `doc_crawler.py` works great with Tor : `torsocks doc_crawler.py http://…`\
-For `pip` installed `doc_crawler`, the command can be invoked as follow: `python3 -m doc_crawler […] http://…`
+For a `pip` installed `doc_crawler`, the command can be invoked as follow: `python3 -m doc_crawler […] http://…`
 
 ## Tests
 Around 20 doctests are included in `doc_crawler.py`. You can run them with the following
