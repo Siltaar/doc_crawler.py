@@ -3,7 +3,7 @@ descendant pages, the encountered document files (by default: PDF, ODT, CSV, RTF
 based on regular expression matching (typically against their extension).
 
 ## Features
-Documents can be listed to the output or downloaded (with the `--download` argument).
+Documents can be listed on the standard output or downloaded (with the `--download` argument).
 
 To address real life situations, one can log activity and follow the progress (with `--verbose`). \
 Also, the search can be limited to one page (with the `--single-page` argument).
