@@ -55,13 +55,13 @@ def doc_crawler(base_url, wanted_ext=WANTED_EXT, do_dl=False, do_journal=False,
 	"""
 	>>> url='https://github.com/Siltaar/doc_crawler.py/blob/master/doc_crawler/test/'
 	>>> doc_crawler(url, '/raw/', do_wait=1)  # doctest: +ELLIPSIS
-	https://.../raw/master/test/test_a.txt
-	https://.../raw/master/test/test_b.txt
-	https://.../raw/master/test/test_c.txt
-	https://.../raw/master/test/test_doc.lst
+	https://.../raw/master/doc_crawler/test/test_a.txt
+	https://.../raw/master/doc_crawler/test/test_b.txt
+	https://.../raw/master/doc_crawler/test/test_c.txt
+	https://.../raw/master/doc_crawler/test/test_doc.lst
 	>>> doc_crawler(url, '/raw/', do_wait=0, single_page=1)
 	>>> doc_crawler(url+'test_a.txt', '/raw/', single_page=1)  # doctest: +ELLIPSIS
-	https://.../raw/master/test/test_a.txt
+	https://.../raw/master/doc_crawler/test/test_a.txt
 	"""
 	journal = 0
 
@@ -172,11 +172,10 @@ def download_file(URL, do_wait=False, do_random_wait=False):
 
 def download_files(URLs_file, do_wait=False, do_random_wait=False):
 	""" Downloads files which URL are listed in the pointed file.
-	>>> url='https://github.com/Siltaar/doc_crawler.py/blob/master/doc_crawler/test/'
 	>>> download_files('test/test_doc.lst')  # doctest: +ELLIPSIS
-	download 1 - https://.../blob/master/test/test_a.txt
-	download 2 - https://.../blob/master/test/test_b.txt
-	download 3 - https://.../blob/master/test/test_c.txt
+	download 1 - https://.../blob/master/doc_crawler/test/test_a.txt
+	download 2 - https://.../blob/master/doc_crawler/test/test_b.txt
+	download 3 - https://.../blob/master/doc_crawler/test/test_c.txt
 	downloaded 3 / 3
 	"""
 	line_nb = 0
