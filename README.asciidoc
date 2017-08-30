@@ -1,14 +1,10 @@
-
-== Name
 doc_crawler - explore a website recursively and download all the wanted documents (PDF, ODT…).
 
 == Synopsis
 	doc_crawler.py [--accept=jpe?g$] [--download] [--single-page] [--verbose] http://…
 	doc_crawler.py [--wait=3] [--no-random-wait] --download-files url.lst
 	doc_crawler.py [--wait=0] --download-file http://…
-
 	or
-
 	python3 -m doc_crawler […] http://…
 
 == Description
@@ -57,11 +53,11 @@ _doc_crawler.py_ works great with Tor : `torsocks doc_crawler.py http://…`
 	Directly save in the current folder the URL-pointed document.
 
 == Tests
-Around 20 doctests are included in _doc_crawler.py_. You can run them with the following
-command in the cloned repository root:
+Around 20 _doctests_ are included in _doc_crawler.py_. You can run them with the following
+command in the cloned repository root: +
 `python3 -m doctest doc_crawler.py`
 
-Tests can also be launched one by one using the _--test=XXX_ argument:
+Tests can also be launched one by one using the _--test=XXX_ argument: +
 `python3 -m doc_crawler --test=download_file`
 
 Tests are successfully passed if nothing is output.
@@ -73,10 +69,10 @@ Tests are successfully passed if nothing is output.
 One can install them Under Debian using the following command : `apt install python3-requests python3-yaml`
 
 == Author
-	Simon Descarpentries - https://github.com/Siltaar/
+Simon Descarpentries - https://github.com/Siltaar/
 
 == Ressources
-	Github repository : https://github.com/Siltaar/doc_crawler.py
+Github repository : https://github.com/Siltaar/doc_crawler.py
 
 == Licensing
 GNU General Public License v3.0. See LICENCE file for more information.
