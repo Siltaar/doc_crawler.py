@@ -12,7 +12,7 @@ setup(
 	author_email="contact@acoeuro.com",  # will be public
 	description="Explore a website recursively and download all the wanted documents "
 	"(PDF, ODT…)",
-	long_description=open('README.md').read(),
+	long_description=open('README.asciidoc').read(),
 	include_package_data=True,  # take MANIFEST.in into account
 	url='https://github.com/Siltaar/doc_crawler.py',
 	classifiers=[  # https://pypi.python.org/pypi?%3Aaction=list_classifiers.
