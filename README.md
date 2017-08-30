@@ -31,9 +31,9 @@ argument).
  Example : `--wait=3` will wait between 1 and 3s before each download. Default is 5.\
 `--no-random-wait` stops the random pick up of waiting times. `--wait=` or default is used.\
 `--download-files` will download each documents which URL are listed in the given file. \
- Example : `--download-files url.lst`
+ Example : `--download-files url.lst` \
 `--download-file` will directly save in the current folder the URL-pointed document. \
- Example : `--download-file http://…` \
+ Example : `--download-file http://…`
 
 ## Usages
 `doc_crawler.py [--accept=jpe?g] [--download] [--single-page] [--verbose] http://…` \
@@ -42,7 +42,7 @@ argument).
 
 `--wait=` and `--no-random-wait` arguments can be used with every form. \
 `doc_crawler.py` works great with Tor : `torsocks doc_crawler.py http://…`\
-From a `pip` installed `doc_crawler` package, the command can be invoked as follow:
+From a `pip` installed `doc_crawler`, the command can be invoked as follow:
 `python3 -m doc_crawler […] http://…`
 
 ## Tests

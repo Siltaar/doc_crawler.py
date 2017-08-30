@@ -96,6 +96,8 @@ def run_cmd(argv):
 def doc_crawler(base_url, wanted_ext=WANTED_EXT, do_dl=False, do_journal=False,
 		do_wait=False, do_random_wait=False, single_page=False):
 	"""
+	For more information, see help(run_cmd) and README.md
+
 	>>> url='https://github.com/Siltaar/doc_crawler.py/blob/master/doc_crawler/test/'
 	>>> doc_crawler(url, '/raw/', do_wait=1)  # doctest: +ELLIPSIS
 	https://.../raw/master/doc_crawler/test/test_a.txt
