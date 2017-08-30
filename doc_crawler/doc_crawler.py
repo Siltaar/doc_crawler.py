@@ -11,43 +11,86 @@ from urllib.parse import urljoin
 import requests, re, logging, logging.config, yaml, datetime
 
 
-"""  Explore a website recursively from a given URL and download all the documents matching
-a regular expression.
-
-Documents can be listed to the output or downloaded (with the --download argument).
-
-To address real life situations, one can log activity and follow the progress (with --verbose).
-Also, the search can be limited to a single page (with the --single-page argument).
-
-Else, documents can be downloaded from a given list of URL (that one may have previously
-produced using `doc_crawler`, and one can finish the work downloading documents one by one if
-necessary.
-
-By default, the program waits a randomly - pick amount of seconds, between 1 and 5 before each
-downloads. This behavior can be disabled (with a --no-random-wait and/or --wait=0 argument).
-"""
-
 __all__ = ['doc_crawler', 'download_files', 'download_file', 'run_cmd']
-__version__ = '1.0'
-LOGGING = """
-	version: 1
-	disable_existing_loggers: False
-	formatters:
-		local:
-			format: '[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s'
-	handlers:
-		journal:
-			class: logging.FileHandler
-			formatter: local
-			filename: {cur_dt}_journal.log
-			encoding: utf-8
-	loggers:
-		journal:
-			handlers: ['journal']
-			level: DEBUG
-""".format(cur_dt=datetime.datetime.now().isoformat())
 WANTED_EXT = '\.(pdf|docx?|xlsx?|od[ts]|csv|rtf)$'
 BIN_EXT = '\.?(jpe?g|png|gif|swf)$'
+
+
+def run_cmd(argv):
+	"""  Explore a website recursively from a given URL and download all the documents matching
+	a regular expression.
+
+	Documents can be listed to the output or downloaded (with the --download argument).
+
+	To address real life situations, activities can be logged (with --verbose).
+	Also, the search can be limited to a single page (with the --single-page argument).
+
+	Else, documents can be downloaded from a given list of URL (that you may have previously
+	produced using `doc_crawler`), and you can finish the work downloading documents one by one
+	if necessary.
+
+	By default, the program waits a randomly-pick amount of seconds, between 1 and 5 before each
+	downloads. This behavior can be disabled (with a --no-random-wait and/or --wait=0 argument).
+	"""
+
+	USAGE = """\nUsages:
+	doc_crawler.py [--accept=jpe?g] [--download] [--single-page] [--verbose] http://…
+	doc_crawler.py [--wait=3] [--no-random-wait] --download-files url.lst
+	doc_crawler.py [--wait=0] --download-file http://…
+
+	or
+
+	python3 -m doc_crawler […] http://…
+	"""
+	regext = WANTED_EXT
+	do_dl = False
+	do_journal = False
+	do_wait = 5
+	do_random_wait = True
+	single_page = False
+
+	for i, arg in enumerate(argv):
+		if i == 0:  # 1st arg of argv is the program name
+			continue
+		elif arg.startswith('--accept'):
+			regext = arg[len('--accept='):]
+		elif arg == '--download':
+			do_dl = True
+		elif arg == '--single-page':
+			single_page = True
+		elif arg == '--verbose':
+			do_journal = True
+		elif arg.startswith('--wait'):
+			do_wait = int(arg[len('--wait='):])
+		elif arg == '--no-random-wait':
+			do_random_wait = False
+		elif arg.startswith('http'):
+			continue
+		elif arg == '--download-file':
+			if len(argv) < 3:
+				raise SystemExit("Missing argument\n"+USAGE)
+			else:
+				download_file(argv[-1], do_wait, do_random_wait)
+				raise SystemExit
+		elif arg == '--download-files':
+			if len(argv) < 3:
+				raise SystemExit("Missing argument\n"+USAGE)
+			else:
+				download_files(argv[-1], do_wait, do_random_wait)
+				raise SystemExit
+		elif arg == '--help':
+			raise SystemExit(USAGE)
+		elif arg.startswith('--test'):
+			import doctest
+			doctest.run_docstring_examples(globals()[arg[len('--test='):]], globals())
+			raise SystemExit()
+		else:
+			raise SystemExit("Unrecognized argument: "+arg+"\n"+USAGE)
+
+	if len(argv) < 2:
+		raise SystemExit("Missing argument\n"+USAGE)
+
+	doc_crawler(argv[-1], regext, do_dl, do_journal, single_page)
 
 
 def doc_crawler(base_url, wanted_ext=WANTED_EXT, do_dl=False, do_journal=False,
@@ -200,65 +243,23 @@ def download_files(URLs_file, do_wait=False, do_random_wait=False):
 	print('downloaded %d / %d' % (downloaded_files, line_nb))
 
 
-def run_cmd(argv):
-	USAGE = """\nUsages:
-	doc_crawler.py [--accept=jpe?g] [--download] [--single-page] [--verbose] http://…
-	doc_crawler.py [--wait=3] [--no-random-wait] --download-files url.lst
-	doc_crawler.py [--wait=0] --download-file http://…
-
-	or
-
-	python3 -m doc_crawler […] http://…
-	"""
-	regext = WANTED_EXT
-	do_dl = False
-	do_journal = False
-	do_wait = 5
-	do_random_wait = True
-	single_page = False
-
-	for i, arg in enumerate(argv):
-		if i == 0:  # 1st arg of argv is the program name
-			continue
-		elif arg.startswith('--accept'):
-			regext = arg[len('--accept='):]
-		elif arg == '--download':
-			do_dl = True
-		elif arg == '--single-page':
-			single_page = True
-		elif arg == '--verbose':
-			do_journal = True
-		elif arg.startswith('--wait'):
-			do_wait = int(arg[len('--wait='):])
-		elif arg == '--no-random-wait':
-			do_random_wait = False
-		elif arg.startswith('http'):
-			continue
-		elif arg == '--download-file':
-			if len(argv) < 3:
-				raise SystemExit("Missing argument\n"+USAGE)
-			else:
-				download_file(argv[-1], do_wait, do_random_wait)
-				raise SystemExit
-		elif arg == '--download-files':
-			if len(argv) < 3:
-				raise SystemExit("Missing argument\n"+USAGE)
-			else:
-				download_files(argv[-1], do_wait, do_random_wait)
-				raise SystemExit
-		elif arg == '--help':
-			raise SystemExit(USAGE)
-		elif arg.startswith('--test'):
-			import doctest
-			doctest.run_docstring_examples(globals()[arg[len('--test='):]], globals())
-			raise SystemExit()
-		else:
-			raise SystemExit("Unrecognized argument: "+arg+"\n"+USAGE)
-
-	if len(argv) < 2:
-		raise SystemExit("Missing argument\n"+USAGE)
-
-	doc_crawler(argv[-1], regext, do_dl, do_journal, single_page)
+LOGGING = """
+	version: 1
+	disable_existing_loggers: False
+	formatters:
+		local:
+			format: '[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s'
+	handlers:
+		journal:
+			class: logging.FileHandler
+			formatter: local
+			filename: {cur_dt}_journal.log
+			encoding: utf-8
+	loggers:
+		journal:
+			handlers: ['journal']
+			level: DEBUG
+""".format(cur_dt=datetime.datetime.now().isoformat())
 
 
 if __name__ == '__main__':

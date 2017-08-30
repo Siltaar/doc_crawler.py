@@ -5,19 +5,21 @@ based on regular expression matching (typically against their extension).
 ## Features
 Documents can be listed on the standard output or downloaded (with the `--download` argument).
 
-To address real life situations, one can log activity and follow the progress (with `--verbose`). \
+To address real life situations, activities can be logged (with `--verbose`). \
 Also, the search can be limited to one page (with the `--single-page` argument).
 
-Else, documents can be downloaded from a given list of URL, that one may have previously
+Else, documents can be downloaded from a given list of URL, that you may have previously
 produced using default options of `doc_crawler` and an output redirection such as: \
 `./doc_crawler.py http://… > url.lst`.
 
-To finish the work, documents can be downloaded one by one if necessary, using the `--download-file`
-argument, which makes `doc_crawler` a tool sufficient by itself to assist you at every steps.
+To finish the work, documents can be downloaded one by one if necessary, using the
+`--download-file` argument, which makes `doc_crawler` a tool sufficient by itself to assist you
+at every steps.
 
 By default, the program waits a randomly-pick amount of seconds, between 1 and 5, before each
-download to avoid being rude toward the webserver it interacts with (and so avoid to be black-listed).
-This behavior can be disabled (with a `--no-random-wait` and/or a `--wait=0` argument).
+download to avoid being rude toward the webserver it interacts with (and so avoid being
+black-listed). This behavior can be disabled (with a `--no-random-wait` and/or a `--wait=0`
+argument).
 
 ## Options
 `--accept` optional regular expression (case insensitive) to keep matching document names. \
@@ -40,7 +42,8 @@ This behavior can be disabled (with a `--no-random-wait` and/or a `--wait=0` arg
 
 `--wait=` and `--no-random-wait` arguments can be used with every form. \
 `doc_crawler.py` works great with Tor : `torsocks doc_crawler.py http://…`\
-For a `pip` installed `doc_crawler`, the command can be invoked as follow: `python3 -m doc_crawler […] http://…`
+From a `pip` installed `doc_crawler` package, the command can be invoked as follow:
+`python3 -m doc_crawler […] http://…`
 
 ## Tests
 Around 20 doctests are included in `doc_crawler.py`. You can run them with the following

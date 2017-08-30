@@ -1,1 +1,2 @@
-recursive-include test *.txt *.lst
+include *.md
+recursive-include doc_crawler/test *.txt *.lst

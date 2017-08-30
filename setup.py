@@ -10,7 +10,8 @@ setup(
 	packages=find_packages(),
 	author="Simon Descarpentries",
 	author_email="contact@acoeuro.com",  # will be public
-	description="Explore a website recursively and download all the wanted documents (PDF, ODT…)",
+	description="Explore a website recursively and download all the wanted documents "
+	"(PDF, ODT…)",
 	long_description=open('README.md').read(),
 	include_package_data=True,  # take MANIFEST.in into account
 	url='https://github.com/Siltaar/doc_crawler.py',
@@ -23,6 +24,7 @@ setup(
 		"Intended Audience :: Developers",
 		"License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)"
 	],
-	keywords='crawler downloader recursive pdf-extractor web-crawler web-crawler-python file-download',
+	keywords='crawler downloader recursive pdf-extractor web-crawler web-crawler-python '
+	'file-download',
 	python_requires='>=3',
 )
