@@ -3,61 +3,65 @@
 doc_crawler - explore a website recursively and download all the wanted documents (PDF, ODT…).
 
 == Synopsis
-include::SYNOPSIS.inc[]
+	doc_crawler.py [--accept=jpe?g$] [--download] [--single-page] [--verbose] http://…
+	doc_crawler.py [--wait=3] [--no-random-wait] --download-files url.lst
+	doc_crawler.py [--wait=0] --download-file http://…
+
+	or
+
+	python3 -m doc_crawler […] http://…
 
 == Description
-'doc_crawler' can explore a website recursively from a given URL and retrieve, in the
+_doc_crawler_ can explore a website recursively from a given URL and retrieve, in the
 descendant pages, the encountered document files (by default: PDF, ODT, CSV, RTF, DOC and XLS)
-based on regular expression matching (typically against their extension).
+based on regular expression matching (typically against their extension). Documents can be
+listed on the standard output or downloaded (with the _--download_ argument).
 
-Documents can be listed on the standard output or downloaded (with the '--download' argument).
+To address real life situations, activities can be logged (with _--verbose_). +
+Also, the search can be limited to one page (with the _--single-page_ argument).
 
-To address real life situations, activities can be logged (with '--verbose').
-Also, the search can be limited to one page (with the '--single-page' argument).
+Documents can be downloaded from a given list of URL, that you may have previously
+produced using default options of _doc_crawler_ and an output redirection such as: +
+`./doc_crawler.py http://… > url.lst`
 
-Else, documents can be downloaded from a given list of URL, that you may have previously
-produced using default options of 'doc_crawler' and an output redirection such as:
-[source,shell]
-./doc_crawler.py http://… > url.lst
-
-To finish the work, documents can be downloaded one by one if necessary, using the
-'--download-file' argument, which makes 'doc_crawler' a tool sufficient by itself to assist you
+Documents can also be downloaded one by one if necessary (to finish the work), using the
+_--download-file_ argument, which makes _doc_crawler_ a tool sufficient by itself to assist you
 at every steps.
 
 By default, the program waits a randomly-pick amount of seconds, between 1 and 5, before each
 download to avoid being rude toward the webserver it interacts with (and so avoid being
-black-listed). This behavior can be disabled (with a '--no-random-wait' and/or a '--wait=0'
+black-listed). This behavior can be disabled (with a _--no-random-wait_ and/or a _--wait=0_
 argument).
 
-'doc_crawler.py' works great with Tor : `torsocks doc_crawler.py http://…`
+_doc_crawler.py_ works great with Tor : `torsocks doc_crawler.py http://…`
 
 == Options
-*--accept*='jpe?g$'::
+*--accept*=_jpe?g$_::
 	Optional regular expression (case insensitive) to keep matching document names.
-	Example : '--accept=jpe?g$' will hopefully keep all : .JPG, .JPEG, .jpg, .jpeg
+	Example : _--accept=jpe?g$_ will keep all : .JPG, .JPEG, .jpg, .jpeg
 *--download*::
 	Directly downloads found documents if set, output their URL if not.
 *--single-page*::
 	Limits the search for documents to download to the giver URL.
 *--verbose*::
 	Creates a log file to keep trace of what was done.
-*--wait*='x'::
+*--wait*=x::
 	Change the default waiting time before each download (page or document).
-	Example : '--wait=3' will wait between 1 and 3s before each download. Default is 5.
+	Example : _--wait=3_ will wait between 1 and 3s before each download. Default is 5.
 *--no-random-wait*::
-	Stops the random pick up of waiting times. '--wait=' or default is used.
+	Stops the random pick up of waiting times. _--wait=_ or default is used.
 *--download-files* url.lst::
 	Downloads each documents which URL are listed in the given file.
-	Example : '--download-files url.lst'
-*--download-file* 'http://…'::
+	Example : _--download-files url.lst_
+*--download-file* http://…::
 	Directly save in the current folder the URL-pointed document.
 
 == Tests
-Around 20 doctests are included in 'doc_crawler.py'. You can run them with the following
+Around 20 doctests are included in _doc_crawler.py_. You can run them with the following
 command in the cloned repository root:
 `python3 -m doctest doc_crawler.py`
 
-Tests can also be launched one by one using the '--test=XXX' argument:
+Tests can also be launched one by one using the _--test=XXX_ argument:
 `python3 -m doc_crawler --test=download_file`
 
 Tests are successfully passed if nothing is output.
@@ -68,5 +72,11 @@ Tests are successfully passed if nothing is output.
 
 One can install them Under Debian using the following command : `apt install python3-requests python3-yaml`
 
-== COPYING
+== Author
+	Simon Descarpentries - https://github.com/Siltaar/
+
+== Ressources
+	Github repository : https://github.com/Siltaar/doc_crawler.py
+
+== Licensing
 GNU General Public License v3.0. See LICENCE file for more information.
