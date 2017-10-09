@@ -73,6 +73,7 @@ Simon Descarpentries - https://github.com/Siltaar/
 
 == Ressources
 Github repository : https://github.com/Siltaar/doc_crawler.py
+Pypi repository : https://pypi.python.org/pypi/doc_crawler
 
 == Licensing
 GNU General Public License v3.0. See LICENCE file for more information.
