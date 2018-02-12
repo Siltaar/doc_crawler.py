@@ -38,7 +38,7 @@ _doc_crawler.py_ works great with Tor : `torsocks doc_crawler.py http://…`
 *--download*::
 	Directly downloads found documents if set, output their URL if not.
 *--single-page*::
-	Limits the search for documents to download to the giver URL.
+	Limits the search for documents to download to the given URL.
 *--verbose*::
 	Creates a log file to keep trace of what was done.
 *--wait*=x::
