@@ -12,8 +12,8 @@ import requests, re, logging, logging.config, yaml, datetime
 
 
 __all__ = ['doc_crawler', 'download_files', 'download_file', 'run_cmd']
-WANTED_EXT = '\.(pdf|docx?|xlsx?|od[ts]|csv|rtf)$'
-BIN_EXT = '\.?(jpe?g|png|gif|swf)$'
+WANTED_EXT = '\.(pdf|docx?|xlsx?|pptx?|o(d|t)[cgmpst]|csv|rtf|zip|rar|t?gz|xz)$'
+BIN_EXT = '\.?(jpe?g|png|gif|ico|bmp|swf|flv|mpe?.|h26.|avi|m.v|flac|zip|rar|t?gz|xz|js)$'
 
 
 def run_cmd(argv):
@@ -124,15 +124,19 @@ def doc_crawler(base_url, wanted_ext=WANTED_EXT, do_dl=False, do_journal=False,
 		do_journal and journal.info("tries page " + page_url)
 
 		try:
-			page = requests.get(page_url)
+			page = requests.get(page_url, stream=True)
 		except Exception as e:
 			do_journal and journal.error(e)
 			stderr(e)
 			continue
 
-		found_pages_list, found_pages_set, regurgited_pages, caught_docs = explore_page(
-			base_url, page_url, str(page.content), wanted_ext, journal, do_dl,
-			found_pages_list, found_pages_set, regurgited_pages, caught_docs)
+		if (page.status_code == requests.codes.ok and
+				re.search('text/(html|css)', page.headers['content-type'], re.I)):
+			found_pages_list, found_pages_set, regurgited_pages, caught_docs = explore_page(
+				base_url, page_url, str(page.content), wanted_ext, journal, do_dl,
+				found_pages_list, found_pages_set, regurgited_pages, caught_docs)
+
+		page.close()
 
 		if single_page:
 			break
@@ -155,6 +159,14 @@ def explore_page(base_url, page_url, page_str, wanted_ext, journal, do_dl,
 	([], set(), set(), {'http://a.fr/c.pdf'})
 	>>> explore_page('http://a.fr','http://a.fr/b','href="c.JPG"', W,0,0,[],set(),set(),set())
 	([], set(), {'http://a.fr/c.JPG'}, set())
+	>>> explore_page(ht+'a.fr','http://a.fr/b','src="c.JPG"',  'JPG',0,0,[],set(),set(),set())
+	http://a.fr/c.JPG
+	([], set(), set(), {'http://a.fr/c.JPG'})
+	>>> explore_page(ht+'a.fr','http://a.fr/b','src="c.css"',      W,0,0,[],set(),set(),set())
+	(['http://a.fr/c.css'], {'http://a.fr/c.css'}, set(), set())
+	>>> explore_page(ht+'a.fr','http://a.fr/b','url("c.JPG")', 'JPG',0,0,[],set(),set(),set())
+	http://a.fr/c.JPG
+	([], set(), set(), {'http://a.fr/c.JPG'})
 	>>> explore_page('http://a.fr','http://a.fr/b','href="httpc"', W,0,0,[],set(),set(),set())
 	(['http://a.fr/httpc'], {'http://a.fr/httpc'}, set(), set())
 	>>> explore_page('http://a.fr','http://a.fr/b/c','href="d"',   W,0,0,[],set(),set(),set())
@@ -180,8 +192,9 @@ def explore_page(base_url, page_url, page_str, wanted_ext, journal, do_dl,
 	>>> explore_page(ht+'a.fr','http://a.fr/?b=c','href="?d=e"',   W,0,0,[],set(),set(),set())
 	(['http://a.fr/?d=e'], {'http://a.fr/?d=e'}, set(), set())
 	"""
-	for a_href in re.finditer('href="(.*?)"', page_str, re.I):  # extract links
-		a_href = a_href.group(1)
+	# extract links
+	for a_href in re.finditer('(href|src)="(.*?)"|url\("?\'?(.*?)\'?"?\)', page_str, re.I):
+		a_href = a_href.group(a_href.lastindex)
 
 		if not re.search('^https?://', a_href):  # if it's a relative link
 			a_href = urljoin(page_url, a_href)

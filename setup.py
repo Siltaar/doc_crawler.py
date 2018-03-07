@@ -25,6 +25,6 @@ setup(
 		"License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)"
 	],
 	keywords='crawler downloader recursive pdf-extractor web-crawler web-crawler-python '
-	'file-download',
+	'file-download pdf zip doc odt',
 	python_requires='>=3',
 )

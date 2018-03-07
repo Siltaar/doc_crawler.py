@@ -9,7 +9,7 @@ doc_crawler - explore a website recursively and download all the wanted document
 
 == Description
 _doc_crawler_ can explore a website recursively from a given URL and retrieve, in the
-descendant pages, the encountered document files (by default: PDF, ODT, CSV, RTF, DOC and XLS)
+descendant pages, the encountered document files (by default: PDF, ODT, DOC, XLS, ZIP…)
 based on regular expression matching (typically against their extension). Documents can be
 listed on the standard output or downloaded (with the _--download_ argument).
 
@@ -53,7 +53,7 @@ _doc_crawler.py_ works great with Tor : `torsocks doc_crawler.py http://…`
 	Directly save in the current folder the URL-pointed document.
 
 == Tests
-Around 20 _doctests_ are included in _doc_crawler.py_. You can run them with the following
+Around 30 _doctests_ are included in _doc_crawler.py_. You can run them with the following
 command in the cloned repository root: +
 `python3 -m doctest doc_crawler.py`
 
@@ -69,11 +69,14 @@ Tests are successfully passed if nothing is output.
 One can install them under Debian using the following command : `apt install python3-requests python3-yaml`
 
 == Author
-Simon Descarpentries - https://github.com/Siltaar/
+Simon Descarpentries - https://s.d12s.fr
 
 == Ressources
 Github repository : https://github.com/Siltaar/doc_crawler.py +
 Pypi repository : https://pypi.python.org/pypi/doc_crawler
 
-== Licensing
+== Support
+To support this project, you may consider (even a symbolic) donation via : https://liberapay.com/Siltaar
+
+== Licence
 GNU General Public License v3.0. See LICENCE file for more information.

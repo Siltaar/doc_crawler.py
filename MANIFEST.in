@@ -1,2 +1,2 @@
-include *.md
+include *.md *.asciidoc
 recursive-include doc_crawler/test *.txt *.lst
