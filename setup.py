@@ -27,4 +27,9 @@ setup(
 	keywords='crawler downloader recursive pdf-extractor web-crawler web-crawler-python '
 	'file-download pdf zip doc odt',
 	python_requires='>=3',
+	# entry_points={
+	#	'console_scripts': [
+	#		'doc_crawler.py = doc_crawler.doc_crawler:run_cmd',  # doc_crawler is not a package
+	#	],
+	# },
 )

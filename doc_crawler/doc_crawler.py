@@ -13,7 +13,7 @@ import requests, re, logging, logging.config, yaml, datetime
 
 __all__ = ['doc_crawler', 'download_files', 'download_file', 'run_cmd']
 WANTED_EXT = '\.(pdf|docx?|xlsx?|pptx?|o(d|t)[cgmpst]|csv|rtf|zip|rar|t?gz|xz)$'
-BIN_EXT = '\.?(jpe?g|png|gif|ico|bmp|swf|flv|mpe?.|h26.|avi|m.v|flac|zip|rar|t?gz|xz|js)$'
+BIN_EXT = '\.?(jpe?g|png|gif|ico|swf|flv|exe|mpe?.|h26.|avi|m.v|zip|rar|t?gz|xz|js)$'
 
 
 def run_cmd(argv):
