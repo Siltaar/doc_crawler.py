@@ -1,0 +1,1 @@
+Moved to https://framagit.org/Siltaar/doc_crawler.py
