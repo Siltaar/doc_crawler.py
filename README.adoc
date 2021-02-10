@@ -1,1 +1,8 @@
 Moved to https://framagit.org/Siltaar/doc_crawler.py
+
+Please consider supporting this work via :
+
+- https://patreon.com/metapress[Patreon]
+- https://liberapay.com/Meta-Press.es[Liberapay]
+- Bitcoins : bc1qpkj7cu33e5y4jxjuml3e799jv6kxra729c4u03c9vyk85cz6379swqdzs3
+- or Ethereums : 0x89f5f205141fc8eE6540e96BF2DCec20190c584
